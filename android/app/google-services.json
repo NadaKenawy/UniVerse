@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1011480770772",
+    "project_id": "universe-88299",
+    "storage_bucket": "universe-88299.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1011480770772:android:3c8e74c28bfbdb4d9a2341",
+        "android_client_info": {
+          "package_name": "com.example.uviverse_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA38V7XAtnbxowzghld3EHR4nognohkbPA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

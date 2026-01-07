@@ -1,0 +1,47 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:universe/core/constants/shared_pref_helper.dart';
+import 'package:universe/core/constants/shared_pref_keys.dart';
+import 'package:universe/core/networking/server_result.dart';
+import '../../data/models/update_report/update_report_request_body.dart';
+import '../../data/repo/update_report_repo.dart';
+import 'update_report_state.dart';
+
+class UpdateReportCubit extends Cubit<UpdateReportState> {
+  UpdateReportCubit(this._updateReportRepo)
+    : super(const UpdateReportState.initial());
+  final UpdateReportRepo _updateReportRepo;
+
+  TextEditingController review = TextEditingController();
+
+  void emitUpdateReportStates({
+    required String userId,
+    required double ratings,
+  }) async {
+    emit(const UpdateReportState.loading());
+
+    String token = await SharedPrefHelper.getSecuredString(
+      SharedPrefKeys.userToken,
+    );
+
+    final response = await _updateReportRepo.updateReport(
+      UpdateReportRequestBody(
+        title: review.text,
+        ratings: ratings,
+        userId: userId,
+      ),
+      token,
+    );
+
+    response.when(
+      success: (updateReportResponse) {
+        emit(UpdateReportState.success(updateReportResponse));
+      },
+      failure: (errorHandler) {
+        emit(
+          UpdateReportState.error(error: errorHandler.serverFailure.errmessage),
+        );
+      },
+    );
+  }
+}

@@ -1,0 +1,134 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
+
+class SharedPrefHelper {
+  SharedPrefHelper._();
+
+  static const FlutterSecureStorage _secureStorage = FlutterSecureStorage();
+
+  static AndroidOptions _androidOptions() =>
+      const AndroidOptions(encryptedSharedPreferences: true);
+
+  static Future<void> removeData(String key) async {
+    debugPrint(
+      'SharedPrefHelper : data with key : $key has been removed from SharedPreferences',
+    );
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    await sharedPreferences.remove(key);
+  }
+
+  static Future<void> clearAllData() async {
+    debugPrint(
+      'SharedPrefHelper : all data has been cleared from SharedPreferences',
+    );
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    await sharedPreferences.clear();
+  }
+
+  static Future<Null> setData(String key, value) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    debugPrint("SharedPrefHelper : setData with key : $key and value : $value");
+    switch (value.runtimeType) {
+      case const (String):
+        await sharedPreferences.setString(key, value);
+        break;
+      case const (int):
+        await sharedPreferences.setInt(key, value);
+        break;
+      case const (bool):
+        await sharedPreferences.setBool(key, value);
+        break;
+      case const (double):
+        await sharedPreferences.setDouble(key, value);
+        break;
+      default:
+        debugPrint("SharedPrefHelper : Unsupported value type");
+        return null;
+    }
+  }
+
+  static Future<bool> getBool(String key) async {
+    debugPrint('SharedPrefHelper : getBool with key : $key');
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getBool(key) ?? false;
+  }
+
+  static Future<double> getDouble(String key) async {
+    debugPrint('SharedPrefHelper : getDouble with key : $key');
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getDouble(key) ?? 0.0;
+  }
+
+  static Future<int> getInt(String key) async {
+    debugPrint('SharedPrefHelper : getInt with key : $key');
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getInt(key) ?? 0;
+  }
+
+  static Future<String> getString(String key) async {
+    debugPrint('SharedPrefHelper : getString with key : $key');
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString(key) ?? '';
+  }
+
+  static Future<void> setSecuredString(String key, String value) async {
+    try {
+      debugPrint(
+        "FlutterSecureStorage : setSecuredString with key : $key and value : $value",
+      );
+      await _secureStorage.write(
+        key: key,
+        value: value,
+        aOptions: _androidOptions(),
+      );
+    } catch (e) {
+      debugPrint('Error saving secured string: $e');
+    }
+  }
+
+  static Future<String> getSecuredString(String key) async {
+    try {
+      debugPrint('FlutterSecureStorage : getSecuredString with key : $key');
+      return await _secureStorage.read(key: key, aOptions: _androidOptions()) ??
+          '';
+    } catch (e) {
+      debugPrint('Error reading secured string: $e');
+      await _secureStorage.delete(key: key);
+      return '';
+    }
+  }
+
+  static Future<void> removeSecuredData(String key) async {
+    try {
+      debugPrint(
+        'FlutterSecureStorage : data with key : $key has been removed',
+      );
+      await _secureStorage.delete(key: key, aOptions: _androidOptions());
+    } catch (e) {
+      debugPrint('Error removing secured data: $e');
+    }
+  }
+
+  static Future<void> clearAllSecuredData() async {
+    try {
+      debugPrint('FlutterSecureStorage : all data has been cleared');
+      await _secureStorage.deleteAll(aOptions: _androidOptions());
+    } catch (e) {
+      debugPrint('Error clearing secure storage: $e');
+    }
+  }
+
+  static Future<String> getOrCreateUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? userId = prefs.getString('user_id');
+
+    if (userId == null) {
+      userId = const Uuid().v4();
+      await prefs.setString('user_id', userId);
+    }
+
+    return userId;
+  }
+}
