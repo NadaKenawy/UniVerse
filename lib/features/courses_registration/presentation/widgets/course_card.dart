@@ -76,13 +76,13 @@ class CourseCard extends StatelessWidget {
                     child: Image.network(
                       subject.doctorImage,
                       width: 88.w,
-                      height: 100.h,
+                      height: 80.h,
                       fit: BoxFit.fitHeight,
                       errorBuilder: (context, error, stackTrace) {
                         return Image.asset(
                           'assets/images/download.jpg',
                           width: 88.w,
-                          height: 100.h,
+                          height: 80.h,
                           fit: BoxFit.fitHeight,
                         );
                       },
@@ -159,7 +159,8 @@ class CourseCard extends StatelessWidget {
                           },
                         ).show();
                       },
-                      buttonHeight: 40.h,
+                      textStyle: TextStyles.font12WhiteBold,
+                      buttonHeight: 32.h,
                     ),
                   ),
                   SizedBox(width: 16.w),
@@ -172,8 +173,9 @@ class CourseCard extends StatelessWidget {
                           extra: subjectData,
                         );
                       },
-                      buttonHeight: 40.h,
+                      buttonHeight: 32.h,
                       backgroundColor: ColorsManager.grey,
+                      textStyle: TextStyles.font12WhiteBold,
                     ),
                   ),
                 ],

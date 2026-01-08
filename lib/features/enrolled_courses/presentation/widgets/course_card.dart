@@ -11,6 +11,17 @@ class CourseCard extends StatelessWidget {
 
   const CourseCard({super.key, required this.courseItem});
 
+  Color _getBorderColor() {
+    switch (courseItem.status?.toLowerCase()) {
+      case 'pass':
+        return ColorsManager.success;
+      case 'fail':
+        return ColorsManager.error;
+      default:
+        return ColorsManager.primary;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -29,7 +40,7 @@ class CourseCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(14.r),
-          border: Border.all(color: ColorsManager.primary, width: 2.w),
+          border: Border.all(color: _getBorderColor(), width: 2.w),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -53,7 +64,6 @@ class CourseCard extends StatelessWidget {
             ),
             SizedBox(width: 16.w),
             Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [

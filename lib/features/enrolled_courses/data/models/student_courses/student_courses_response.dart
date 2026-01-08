@@ -6,13 +6,13 @@ part 'student_courses_response.g.dart';
 class StudentCoursesResponse {
   final String status;
   final int count;
-  final CoursesFilters filters;
+  final CoursesFilters? filters;
   final List<StudentCourseItem>? courses;
 
   StudentCoursesResponse({
     required this.status,
     required this.count,
-    required this.filters,
+    this.filters,
     this.courses,
   });
 
@@ -24,10 +24,10 @@ class StudentCoursesResponse {
 
 @JsonSerializable()
 class CoursesFilters {
-  final String level;
-  final String type;
+  final String? level;
+  final String? type;
 
-  CoursesFilters({required this.level, required this.type});
+  CoursesFilters({this.level, this.type});
 
   factory CoursesFilters.fromJson(Map<String, dynamic> json) =>
       _$CoursesFiltersFromJson(json);
@@ -39,12 +39,16 @@ class CoursesFilters {
 class StudentCourseItem {
   @JsonKey(name: '_id')
   final String id;
-  final String type;
-  final String level;
+
+  final String? status; // ✅ nullable (pass | fail)
+  final String type; // doctor | teaching assistant
+  final String level; // 1st → 4th Year
+
   final CourseBrief course;
 
   StudentCourseItem({
     required this.id,
+    this.status,
     required this.type,
     required this.level,
     required this.course,
@@ -60,6 +64,7 @@ class StudentCourseItem {
 class CourseBrief {
   @JsonKey(name: '_id')
   final String id;
+
   final String name;
   final int hours;
   final String location;
@@ -83,6 +88,7 @@ class CourseBrief {
 class CourseProfessor {
   @JsonKey(name: '_id')
   final String id;
+
   final String name;
   final String profileImage;
 

@@ -25,12 +25,12 @@ class CourseCard extends StatelessWidget {
             child: Image.network(
               course.imageUrl,
               width: 88.w,
-              height: 120.h,
+              height: 100.h,
               fit: BoxFit.cover,
               errorBuilder: (_, _, _) => Image.asset(
                 'assets/images/download.jpg',
                 width: 88.w,
-                height: 120.h,
+                height: 100.h,
                 fit: BoxFit.fitHeight,
               ),
             ),
@@ -54,25 +54,6 @@ class CourseCard extends StatelessWidget {
                   style: TextStyles.font14BlackSemiBold,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                ),
-                SizedBox(height: 8.h),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.info_outline,
-                      size: 16.sp,
-                      color: ColorsManager.primary,
-                    ),
-                    SizedBox(width: 6.w),
-                    Flexible(
-                      child: Text(
-                        course.type,
-                        style: TextStyles.font14BlackMedium,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
                 ),
                 SizedBox(height: 4.h),
                 Row(

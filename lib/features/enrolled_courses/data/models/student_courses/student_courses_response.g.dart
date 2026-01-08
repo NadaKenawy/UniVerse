@@ -11,7 +11,9 @@ StudentCoursesResponse _$StudentCoursesResponseFromJson(
 ) => StudentCoursesResponse(
   status: json['status'] as String,
   count: (json['count'] as num).toInt(),
-  filters: CoursesFilters.fromJson(json['filters'] as Map<String, dynamic>),
+  filters: json['filters'] == null
+      ? null
+      : CoursesFilters.fromJson(json['filters'] as Map<String, dynamic>),
   courses: (json['courses'] as List<dynamic>?)
       ?.map((e) => StudentCourseItem.fromJson(e as Map<String, dynamic>))
       .toList(),
@@ -28,8 +30,8 @@ Map<String, dynamic> _$StudentCoursesResponseToJson(
 
 CoursesFilters _$CoursesFiltersFromJson(Map<String, dynamic> json) =>
     CoursesFilters(
-      level: json['level'] as String,
-      type: json['type'] as String,
+      level: json['level'] as String?,
+      type: json['type'] as String?,
     );
 
 Map<String, dynamic> _$CoursesFiltersToJson(CoursesFilters instance) =>
@@ -38,6 +40,7 @@ Map<String, dynamic> _$CoursesFiltersToJson(CoursesFilters instance) =>
 StudentCourseItem _$StudentCourseItemFromJson(Map<String, dynamic> json) =>
     StudentCourseItem(
       id: json['_id'] as String,
+      status: json['status'] as String?,
       type: json['type'] as String,
       level: json['level'] as String,
       course: CourseBrief.fromJson(json['course'] as Map<String, dynamic>),
@@ -46,6 +49,7 @@ StudentCourseItem _$StudentCourseItemFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$StudentCourseItemToJson(StudentCourseItem instance) =>
     <String, dynamic>{
       '_id': instance.id,
+      'status': instance.status,
       'type': instance.type,
       'level': instance.level,
       'course': instance.course,
