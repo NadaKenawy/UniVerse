@@ -146,7 +146,7 @@ class SupportContactScreen extends StatelessWidget {
               const SizedBox(width: 8),
               Flexible(
                 child: Text(
-                  'support@rafikapp.com',
+                  'support@universe.com',
                   style: TextStyles.font14BlackBold,
                 ),
               ),
@@ -180,21 +180,21 @@ class SupportContactScreen extends StatelessWidget {
           buildSocialRow(
             FontAwesomeIcons.twitter,
             'Twitter',
-            'twitter@rafikapp.com',
+            'twitter@universe.com',
             ColorsManager.primary.withValues(alpha: .6),
           ),
           const SizedBox(height: 8),
           buildSocialRow(
             Icons.facebook,
             'Facebook',
-            'facebook@rafikapp.com',
+            'facebook@universe.com',
             ColorsManager.primary,
           ),
           const SizedBox(height: 8),
           buildSocialRow(
             FontAwesomeIcons.instagram,
             'Instagram',
-            'instagram@rafikapp.com',
+            'instagram@universe.com',
             Colors.pinkAccent,
           ),
         ],

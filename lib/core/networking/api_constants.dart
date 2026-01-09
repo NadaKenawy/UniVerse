@@ -16,7 +16,7 @@ class ApiConstants {
   static const String scan = "student/scan";
   static const String getStudentCourses = "student/courses";
   static const String getCourseDetails = "student/courses/{id}";
-  static const String updatePassword = "users/updateUserPassword";
+  static const String updatePassword = "auth/updateUserPassword";
   static const String createReport = "report";
   static const String updateReport = "report";
   static const String getFeedbacks = "report";

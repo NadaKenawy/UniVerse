@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universe/core/constants/user_cubit.dart';
 import 'package:universe/core/theme/colors_manager.dart';
 import 'package:universe/core/theme/text_styles.dart';
+import 'package:universe/core/utils/snackbar.dart';
 import 'package:universe/core/widgets/custom_button.dart';
 import 'package:universe/features/setting/feedback/data/models/get_reports/get_reports_response.dart';
 import 'package:universe/features/setting/feedback/logic/get_reports_cubit/get_reports_cubit.dart';
@@ -54,9 +55,8 @@ class _FeedbackScreenBodyState extends State<FeedbackScreenBody> {
   void showReviewDialog() async {
     final user = context.read<UserCubit>().state.user;
     if (user == null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Please login first')));
+      customSnackBar(context, 'Please login first', ColorsManager.error);
+
       return;
     }
 

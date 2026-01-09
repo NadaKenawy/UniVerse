@@ -6,6 +6,7 @@ import 'package:universe/app/router.dart';
 import 'package:universe/core/constants/app_regex.dart';
 import 'package:universe/core/theme/colors_manager.dart';
 import 'package:universe/core/theme/text_styles.dart';
+import 'package:universe/core/utils/snackbar.dart';
 import 'package:universe/core/widgets/custom_button.dart';
 import 'package:universe/core/widgets/custom_text_form_field.dart';
 import 'package:universe/features/login/logic/login_cubit.dart';
@@ -23,12 +24,8 @@ class LoginScreenBody extends StatelessWidget {
             context.go(AppRouter.kHomeScreen);
           },
           error: (error) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(error),
-                backgroundColor: ColorsManager.error,
-              ),
-            );
+                        customSnackBar(context, error, ColorsManager.error);
+
           },
           orElse: () {},
         );

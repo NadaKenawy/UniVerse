@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:universe/core/theme/colors_manager.dart';
 import 'package:universe/core/theme/text_styles.dart';
+import 'package:universe/core/utils/snackbar.dart';
 import 'package:universe/features/enrolled_courses/data/models/course_details/course_details_response.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -26,6 +28,12 @@ class LecturesResourcesWidget extends StatefulWidget {
 
 class _LecturesResourcesWidgetState extends State<LecturesResourcesWidget> {
   int selectedLectureIndex = 0;
+
+  Future<void> _openLink(String link) async {
+    final fixedLink = link.startsWith('http') ? link : 'https://$link';
+    final uri = Uri.parse(fixedLink);
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,15 +82,11 @@ class _LecturesResourcesWidgetState extends State<LecturesResourcesWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// ===== Title =====
           Text(
             widget.title,
             style: TextStyles.font16BlackBold.copyWith(fontSize: 20.sp),
           ),
-
           SizedBox(height: 12.h),
-
-          /// ===== Lectures Tabs =====
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
@@ -90,7 +94,8 @@ class _LecturesResourcesWidgetState extends State<LecturesResourcesWidget> {
                 widget.lectures.length,
                 (index) => Padding(
                   padding: EdgeInsets.only(right: 8.w),
-                  child: GestureDetector(
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(12.r),
                     onTap: () {
                       setState(() {
                         selectedLectureIndex = index;
@@ -120,42 +125,35 @@ class _LecturesResourcesWidgetState extends State<LecturesResourcesWidget> {
               ),
             ),
           ),
-
           SizedBox(height: 16.h),
-
-          /// ===== Links =====
           if ((widget.lectures[selectedLectureIndex].links?.isNotEmpty ??
               false)) ...[
             Text('Links', style: TextStyles.font14BlackBold),
             SizedBox(height: 8.h),
-            ...(widget.lectures[selectedLectureIndex].links?.map(
-                  (link) => _LinkItem(link: link),
-                ) ??
-                []),
+            ...(widget.lectures[selectedLectureIndex].links!.map(
+              (link) => _LinkItem(link: link, onTap: () => _openLink(link)),
+            )),
           ] else ...[
             Text(
               'No links available for this lecture',
               style: TextStyles.font14BlackMedium,
             ),
           ],
-
           SizedBox(height: 16.h),
-
-          /// ===== Material Links =====
           if ((widget.materialLinks?.isNotEmpty ?? false)) ...[
             Text('Material Links', style: TextStyles.font14BlackBold),
             SizedBox(height: 8.h),
-            ...(widget.materialLinks?.map((link) => _LinkItem(link: link)) ??
-                []),
+            ...(widget.materialLinks!.map(
+              (link) => _LinkItem(link: link, onTap: () => _openLink(link)),
+            )),
           ],
-
           SizedBox(height: 16.h),
-
-          /// ===== Quiz Links =====
           if ((widget.quizLinks?.isNotEmpty ?? false)) ...[
             Text('Quiz Links', style: TextStyles.font14BlackBold),
             SizedBox(height: 8.h),
-            ...(widget.quizLinks?.map((link) => _LinkItem(link: link)) ?? []),
+            ...(widget.quizLinks!.map(
+              (link) => _LinkItem(link: link, onTap: () => _openLink(link)),
+            )),
           ],
         ],
       ),
@@ -165,20 +163,21 @@ class _LecturesResourcesWidgetState extends State<LecturesResourcesWidget> {
 
 class _LinkItem extends StatelessWidget {
   final String link;
+  final VoidCallback onTap;
 
-  const _LinkItem({required this.link});
+  const _LinkItem({required this.link, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(bottom: 6.h),
       child: InkWell(
-        onTap: () async {
-          final uri = Uri.parse(link);
-          if (await canLaunchUrl(uri)) {
-            launchUrl(uri, mode: LaunchMode.externalApplication);
-          }
+        onTap: onTap,
+        onLongPress: () {
+          Clipboard.setData(ClipboardData(text: link));
+          customSnackBar(context, 'Link Copied', ColorsManager.success);
         },
+        borderRadius: BorderRadius.circular(6.r),
         child: Row(
           children: [
             Icon(Icons.link, size: 18.sp, color: ColorsManager.primary),
@@ -186,7 +185,11 @@ class _LinkItem extends StatelessWidget {
             Expanded(
               child: Text(
                 link,
-                style: TextStyles.font14PrimaryMedium,
+                style: TextStyles.font14PrimaryMedium.copyWith(
+                  color: ColorsManager.primary,
+                  decoration: TextDecoration.underline,
+                  decorationColor: ColorsManager.primary,
+                ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
