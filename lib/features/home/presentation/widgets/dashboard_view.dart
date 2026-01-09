@@ -49,7 +49,7 @@ class DashboardView extends StatelessWidget {
                               style: TextStyles.font14BlackMedium,
                             ),
                             Text(
-                              data.name,
+                              data.name.split(' ').take(2).join(' '),
                               style: TextStyles.font16BlackSemiBold,
                             ),
                           ],
